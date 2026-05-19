@@ -1,0 +1,265 @@
+{
+  "sdk": 7,
+  "version": 1005,
+  "name": "TouchPortal Govee LAN Plugin",
+  "id": "io.github.govee.tp.GoveePlugin",
+  "configuration": {
+    "colorDark": "#27b0c4",
+    "colorLight": "#276ac4"
+  },
+  "plugin_start_cmd": "java -Dapple.awt.UIElement=true -jar %TP_PLUGIN_FOLDER%TouchPortalGoveeLANPlugin/TouchPortalGoveeLANPlugin.jar start",
+  "settings": [
+    {
+      "name": "Scan Timeout (ms)",
+      "type": "number",
+      "default": 3000,
+      "readOnly": false,
+      "minValue": 500,
+      "maxValue": 10000
+    },
+    {
+      "name": "Number of Devices",
+      "type": "text",
+      "default": "0",
+      "readOnly": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "io.github.govee.tp.GoveePlugin.BaseCategory",
+      "name": "Touch Portal Govee LAN Plugin",
+      "imagepath": "%TP_PLUGIN_FOLDER%TouchPortalGoveeLANPlugin/images/icon.png",
+      "actions": [
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.turnDevice",
+          "name": "Govee LAN: Turn On/Off",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Turn a Govee device on or off via LAN",
+          "format": "Turn {$io.github.govee.tp.GoveePlugin.BaseCategory.action.turnDevice.data.onOff$} device {$io.github.govee.tp.GoveePlugin.BaseCategory.action.turnDevice.data.deviceList$}",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.turnDevice.data.onOff",
+              "type": "choice",
+              "label": "onOff",
+              "default": "ON",
+              "valueChoices": ["ON", "OFF"]
+            },
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.turnDevice.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.turnAllDevices",
+          "name": "Govee LAN: Turn ALL On/Off",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Turn every discovered Govee device on or off at once",
+          "format": "Turn {$io.github.govee.tp.GoveePlugin.BaseCategory.action.turnAllDevices.data.onOff$} ALL Govee devices",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.turnAllDevices.data.onOff",
+              "type": "choice",
+              "label": "onOff",
+              "default": "OFF",
+              "valueChoices": ["ON", "OFF"]
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustBrightness",
+          "name": "Govee LAN: Adjust Brightness (+/-)",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Increase or decrease current brightness by N (use a negative value to decrease)",
+          "format": "Adjust brightness of {$io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustBrightness.data.deviceList$} by {$io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustBrightness.data.brightnessStep$}",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustBrightness.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            },
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustBrightness.data.brightnessStep",
+              "type": "number",
+              "label": "brightnessStep",
+              "default": 10,
+              "allowDecimals": false
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustColorTemp",
+          "name": "Govee LAN: Adjust Color Temperature (+/-)",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Increase or decrease current color temperature by N kelvin (use a negative value to decrease)",
+          "format": "Adjust color temperature of {$io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustColorTemp.data.deviceList$} by {$io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustColorTemp.data.tempStep$} K",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustColorTemp.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            },
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.adjustColorTemp.data.tempStep",
+              "type": "number",
+              "label": "tempStep",
+              "default": 500,
+              "allowDecimals": false
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.toggleDevice",
+          "name": "Govee LAN: Toggle On/Off",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Toggle a Govee device (invert current state)",
+          "format": "Toggle device {$io.github.govee.tp.GoveePlugin.BaseCategory.action.toggleDevice.data.deviceList$}",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.toggleDevice.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setBrightness",
+          "name": "Govee LAN: Set Brightness",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Set brightness (1-100)",
+          "format": "Set brightness of {$io.github.govee.tp.GoveePlugin.BaseCategory.action.setBrightness.data.deviceList$} to {$io.github.govee.tp.GoveePlugin.BaseCategory.action.setBrightness.data.brightnessVal$}%",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setBrightness.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            },
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setBrightness.data.brightnessVal",
+              "type": "number",
+              "label": "brightnessVal",
+              "default": 100,
+              "allowDecimals": false,
+              "minValue": 1,
+              "maxValue": 100
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setColor",
+          "name": "Govee LAN: Set Color",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Set RGB color",
+          "format": "Set color of {$io.github.govee.tp.GoveePlugin.BaseCategory.action.setColor.data.deviceList$} to {$io.github.govee.tp.GoveePlugin.BaseCategory.action.setColor.data.colorPicker$}",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setColor.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            },
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setColor.data.colorPicker",
+              "type": "color",
+              "label": "colorPicker",
+              "default": "#FF0000FF"
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setColorTemp",
+          "name": "Govee LAN: Set Color Temperature",
+          "prefix": "Plugin",
+          "type": "communicate",
+          "description": "Set color temperature (2000-9000 K). Out-of-range values are clamped.",
+          "format": "Set color temperature of {$io.github.govee.tp.GoveePlugin.BaseCategory.action.setColorTemp.data.deviceList$} to {$io.github.govee.tp.GoveePlugin.BaseCategory.action.setColorTemp.data.tempVal$} K",
+          "tryInline": true,
+          "hasHoldFunctionality": false,
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setColorTemp.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            },
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.action.setColorTemp.data.tempVal",
+              "type": "number",
+              "label": "tempVal",
+              "default": 4000,
+              "allowDecimals": false
+            }
+          ]
+        }
+      ],
+      "connectors": [
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.connector.brightness",
+          "name": "Govee LAN: Brightness Slider",
+          "format": "Brightness of {$io.github.govee.tp.GoveePlugin.BaseCategory.connector.brightness.data.deviceList$}",
+          "supportedTypes": ["slider", "dial"],
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.connector.brightness.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            }
+          ]
+        },
+        {
+          "id": "io.github.govee.tp.GoveePlugin.BaseCategory.connector.colorTemp",
+          "name": "Govee LAN: Color Temperature Slider",
+          "format": "Color temperature of {$io.github.govee.tp.GoveePlugin.BaseCategory.connector.colorTemp.data.deviceList$}",
+          "supportedTypes": ["slider", "dial"],
+          "data": [
+            {
+              "id": "io.github.govee.tp.GoveePlugin.BaseCategory.connector.colorTemp.data.deviceList",
+              "type": "choice",
+              "label": "deviceList",
+              "default": "",
+              "valueChoices": []
+            }
+          ]
+        }
+      ],
+      "states": [],
+      "events": []
+    }
+  ]
+}
