@@ -1,6 +1,6 @@
 {
   "sdk": 7,
-  "version": 1005,
+  "version": 1008,
   "name": "TouchPortal Govee LAN Plugin",
   "id": "io.github.govee.tp.GoveePlugin",
   "configuration": {
@@ -8,22 +8,6 @@
     "colorLight": "#276ac4"
   },
   "plugin_start_cmd": "java -Dapple.awt.UIElement=true -jar %TP_PLUGIN_FOLDER%TouchPortalGoveeLANPlugin/TouchPortalGoveeLANPlugin.jar start",
-  "settings": [
-    {
-      "name": "Scan Timeout (ms)",
-      "type": "number",
-      "default": 3000,
-      "readOnly": false,
-      "minValue": 500,
-      "maxValue": 10000
-    },
-    {
-      "name": "Number of Devices",
-      "type": "text",
-      "default": "0",
-      "readOnly": true
-    }
-  ],
   "categories": [
     {
       "id": "io.github.govee.tp.GoveePlugin.BaseCategory",

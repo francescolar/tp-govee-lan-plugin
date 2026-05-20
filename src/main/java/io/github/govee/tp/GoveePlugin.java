@@ -22,6 +22,20 @@ public class GoveePlugin extends TouchPortalPlugin implements TouchPortalPlugin.
 
     private static final Logger LOG = Logger.getLogger(GoveePlugin.class.getName());
 
+    static {
+        try {
+            String appData = System.getenv("APPDATA");
+            String logPath = (appData != null)
+                ? appData + "\\TouchPortal\\plugins\\TouchPortalGoveeLANPlugin\\plugin.log"
+                : "plugin.log";
+            FileHandler fh = new FileHandler(logPath, 1024 * 1024, 1, false);
+            fh.setFormatter(new SimpleFormatter());
+            Logger root = Logger.getLogger("");
+            root.addHandler(fh);
+            root.setLevel(Level.INFO);
+        } catch (Exception ignored) {}
+    }
+
     static final String PLUGIN_ID   = "io.github.govee.tp.GoveePlugin";
     static final String CATEGORY_ID = PLUGIN_ID + ".BaseCategory";
     static final String CATEGORY    = "BaseCategory";
@@ -46,11 +60,7 @@ public class GoveePlugin extends TouchPortalPlugin implements TouchPortalPlugin.
     private final Map<String, GoveeController> controllers = new LinkedHashMap<>();
     private ScheduledExecutorService scheduler;
 
-    @Setting(name = "Scan Timeout (ms)", defaultValue = "3000")
-    public int scanTimeoutMs = 3000;
-
-    @Setting(name = "Number of Devices", defaultValue = "0", isReadOnly = true)
-    private String numDevices;
+    private static final int SCAN_TIMEOUT_MS = 3000;
 
     public GoveePlugin() {
         super(true);
@@ -205,18 +215,18 @@ public class GoveePlugin extends TouchPortalPlugin implements TouchPortalPlugin.
     private void startSchedulers() {
         if (scheduler != null) scheduler.shutdownNow();
         scheduler = Executors.newScheduledThreadPool(2);
-        scheduler.schedule(this::scanAndUpdate, 0, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(this::scanAndUpdate, 0, 30, TimeUnit.SECONDS);
         scheduler.scheduleWithFixedDelay(this::pollAllStatuses, STATUS_POLL_SECONDS, STATUS_POLL_SECONDS, TimeUnit.SECONDS);
     }
 
     private void scanAndUpdate() {
         try {
-            List<GoveeDevice> found = GoveeDiscovery.scan(scanTimeoutMs);
+            List<GoveeDevice> found = GoveeDiscovery.scan(SCAN_TIMEOUT_MS);
             controllers.clear();
             for (GoveeDevice d : found) {
                 String label = d.getIp() + " (" + d.getSku() + ")";
                 controllers.put(label, new GoveeController(d.getIp()));
-                ensureStatesForDevice(d.getIp(), label);
+                try { ensureStatesForDevice(d.getIp(), label); } catch (Exception ignored) {}
             }
 
             String[] labels = controllers.keySet().toArray(new String[0]);
@@ -229,8 +239,6 @@ public class GoveePlugin extends TouchPortalPlugin implements TouchPortalPlugin.
             sendChoiceUpdate(ID_ADJ_TEMP_DEVICE,    labels);
             sendChoiceUpdate(ID_CONN_BRIGHT_DEVICE, labels);
             sendChoiceUpdate(ID_CONN_TEMP_DEVICE,   labels);
-            sendSettingUpdate("Number of Devices", String.valueOf(found.size()), false);
-
             LOG.info("Govee LAN scan: " + found.size() + " device(s) found.");
         } catch (Exception e) {
             LOG.log(Level.WARNING, "Govee LAN scan failed", e);
@@ -342,6 +350,7 @@ public class GoveePlugin extends TouchPortalPlugin implements TouchPortalPlugin.
 
     @Override
     public void onInfo(TPInfoMessage msg) {
+        LOG.info("onInfo received — starting schedulers");
         startSchedulers();
     }
 
