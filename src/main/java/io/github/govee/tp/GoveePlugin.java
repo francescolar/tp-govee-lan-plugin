@@ -22,21 +22,7 @@ public class GoveePlugin extends TouchPortalPlugin implements TouchPortalPlugin.
 
     private static final Logger LOG = Logger.getLogger(GoveePlugin.class.getName());
 
-    static {
-        try {
-            String appData = System.getenv("APPDATA");
-            String logPath = (appData != null)
-                ? appData + "\\TouchPortal\\plugins\\TouchPortalGoveeLANPlugin\\plugin.log"
-                : "plugin.log";
-            FileHandler fh = new FileHandler(logPath, 1024 * 1024, 1, false);
-            fh.setFormatter(new SimpleFormatter());
-            Logger root = Logger.getLogger("");
-            root.addHandler(fh);
-            root.setLevel(Level.INFO);
-        } catch (Exception ignored) {}
-    }
-
-    static final String PLUGIN_ID   = "io.github.govee.tp.GoveePlugin";
+static final String PLUGIN_ID   = "io.github.govee.tp.GoveePlugin";
     static final String CATEGORY_ID = PLUGIN_ID + ".BaseCategory";
     static final String CATEGORY    = "BaseCategory";
 
@@ -350,7 +336,6 @@ public class GoveePlugin extends TouchPortalPlugin implements TouchPortalPlugin.
 
     @Override
     public void onInfo(TPInfoMessage msg) {
-        LOG.info("onInfo received — starting schedulers");
         startSchedulers();
     }
 
